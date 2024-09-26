@@ -38,9 +38,12 @@ def dark_mode_switch():
 	if variable == "off":
 		customtkinter.set_appearance_mode("light")
 
-############## GUI SECTION ##############
-# Get settings from .ini file
+def read_ini():
+	config = configparser.ConfigParser()
+	config.read("settings.ini")
 
+	dark_mode_setting = config["PERSONILISATION", "dark_mode_theme"]
+	resolution = config["PERSONILISATION", "resolution"]
 
 root=customtkinter.CTk()
 customtkinter.set_appearance_mode("dark")
