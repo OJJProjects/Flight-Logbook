@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 import pyodbc as pyo
 import configparser
+from configparser import ConfigParser
 
 # Functions
 def on_submit_click():
@@ -39,20 +40,22 @@ def dark_mode_switch():
 		customtkinter.set_appearance_mode("light")
 
 def read_ini():
-	config = configparser.ConfigParser()
+	config = ConfigParser()
 	config.read("settings.ini")
 
-	dark_mode_setting = config["PERSONILISATION", "dark_mode_theme"]
-	resolution = config["PERSONILISATION", "resolution"]
+	dark_mode_setting = config.get["PERSONILISATION", "dark_mode_theme"]
+	resolution = config.get["PERSONILISATION", "resolution"]
+
+	customtkinter.set_appearance_mode(dark_mode_setting)
+	root.geometry(resolution)
 
 root=customtkinter.CTk()
-customtkinter.set_appearance_mode("dark")
+read_ini()
 customtkinter.set_default_color_theme("dark-blue")
 customtkinter.set_window_scaling(1.0)
 customtkinter.set_widget_scaling(1.0)
 
 root.title("Flight Logbook")
-root.geometry("800x500")
 
 my_tabs = customtkinter.CTkTabview(root)
 my_tabs.pack(pady=10)
