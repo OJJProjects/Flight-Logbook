@@ -43,11 +43,15 @@ def read_ini():
 	config = ConfigParser()
 	config.read("settings.ini")
 
-	dark_mode_setting = config.get["PERSONILISATION", "dark_mode_theme"]
-	resolution = config.get["PERSONILISATION", "resolution"]
+	ini_dark_mode_setting = config.get["PERSONILISATION", "dark_mode_theme"]
+	ini_resolution = config.get["PERSONILISATION", "resolution"]
 
-	customtkinter.set_appearance_mode(dark_mode_setting)
-	root.geometry(resolution)
+	if ini_dark_mode_setting == "on":
+		customtkinter.set_appearance_mode("dark")
+	if ini_dark_mode_setting == "off":
+		customtkinter.set_appearance_mode("light")
+	
+	root.geometry(ini_resolution)
 
 root=customtkinter.CTk()
 read_ini()
