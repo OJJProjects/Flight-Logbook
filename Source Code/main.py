@@ -1,15 +1,23 @@
 #Import required libraries
+import sys
+
 import customtkinter
-import tkinter as tk
 from tkinter import ttk
 import pyodbc as pyo
 import configparser
+from configparser import ConfigParser
+import os
+
+# Paths
+project_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+database_path = "DBQ=" + project_path + "/database.accdb"
+print(database_path)
 
 # Functions
 def on_submit_click():
 	cnn_string = (
 		r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
-		r"DBQ=C:\Users\oscar\Documents\VSCode Projects\flightlogbook\database.accdb"
+		+ database_path
 		)
 	cnn = pyo.connect(cnn_string)
 	cursor = cnn.cursor()
@@ -21,15 +29,16 @@ def on_submit_click():
 	cursor.commit()
 
 def change_resolution(choice):
-	if choice == "3840x2160":
-		root.geometry("3840x2160")
-	if choice == "2560x1440":
-		root.geometry("2560x1440")
-	if choice == "1920x1080":
-		root.geometry("1920x1080")
-	if choice == "800x500":
-		root.geometry("800x500")
-	global_choice = choice
+    global resolution
+    resolution = choice
+    if resolution == "3840x2160":
+        root.geometry("3840x2160")
+    elif resolution == "2560x1440":
+        root.geometry("2560x1440")
+    elif resolution == "1920x1080":
+        root.geometry("1920x1080")
+    elif resolution == "800x500":
+        root.geometry("800x500")
 
 def dark_mode_switch():
 	variable = dark_mode_variable.get()
@@ -38,24 +47,43 @@ def dark_mode_switch():
 	if variable == "off":
 		customtkinter.set_appearance_mode("light")
 
+def save_settings():
+        config = ConfigParser()
+        config.read("settings.ini")
+
+        # GET DARK MODE THEM SETTING
+        dark_mode_setting = dark_mode_variable.get()
+        
+        config.set('PERSONILISATION','dark_mode_theme',dark_mode_setting)
+        config.set('PERSONILISATION','resolution',resolution)
+        with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+
 ############## GUI SECTION ##############
-# Get settings from .ini file
+root = customtkinter.CTk()
+config = configparser.ConfigParser()
 
+config.read('settings.ini')
+ini_dark_mode = config['PERSONILISATION']['dark_mode_theme']
+ini_resolution = config['PERSONILISATION']['resolution']
 
-root=customtkinter.CTk()
-customtkinter.set_appearance_mode("dark")
-customtkinter.set_default_color_theme("dark-blue")
+if ini_dark_mode == "on":
+        customtkinter.set_appearance_mode("dark")
+        customtkinter.set_default_color_theme("dark-blue")
+if ini_dark_mode == "off":
+        customtkinter.set_appearance_mode("light")
+        customtkinter.set_appearance_mode("light-blue")
+
 customtkinter.set_window_scaling(1.0)
 customtkinter.set_widget_scaling(1.0)
-
-root.title("Flight Logbook")
-root.geometry("800x500")
 
 my_tabs = customtkinter.CTkTabview(root)
 my_tabs.pack(pady=10)
 tab_create_new_flight = my_tabs.add("New Flight")
-tab_view_past_flights = my_tabs.add("Past Flights")
+tab_view_past_flights = my_tabs.add("Past Flight")
 tab_settings = my_tabs.add("Settings")
+                
+root.geometry(ini_resolution)
 
 # Create new flight section
 flight_number_entry = customtkinter.CTkEntry(tab_create_new_flight, placeholder_text="Flight Number")
@@ -112,7 +140,7 @@ resolution_options=["3840x2160","2560x1440","1920x1080","800x500"]
 resolution_combo_box = customtkinter.CTkComboBox(tab_settings, values=resolution_options, command=change_resolution)
 resolution_combo_box.pack(pady=5)
 
-settings_save_button = customtkinter.CTkButton(tab_settings, text="Save")
+settings_save_button = customtkinter.CTkButton(tab_settings, text="Save",command=save_settings)
 settings_save_button.pack(pady=5)
 
 
