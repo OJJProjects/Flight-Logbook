@@ -1,6 +1,5 @@
 #Import required libraries
 import sys
-
 import customtkinter
 from tkinter import ttk
 import pyodbc as pyo
@@ -123,7 +122,7 @@ table.pack()
 
 cnn_string = (
 		r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
-		r"DBQ=C:\Users\oscar\Documents\VSCode Projects\flightlogbook\database.accdb"
+		+ database_path
 		)
 cnn = pyo.connect(cnn_string)
 cursor = cnn.cursor()
