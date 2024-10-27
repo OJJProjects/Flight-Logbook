@@ -1,16 +1,22 @@
 #Import required libraries
+import sys
 import customtkinter
-import tkinter as tk
 from tkinter import ttk
 import pyodbc as pyo
 import configparser
 from configparser import ConfigParser
+import os
+
+# Paths
+project_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+database_path = "DBQ=" + project_path + "/database.accdb"
+print(database_path)
 
 # Functions
 def on_submit_click():
 	cnn_string = (
 		r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
-		r"DBQ=C:\Users\oscar\Documents\VSCode Projects\flightlogbook\database.accdb"
+		+ database_path
 		)
 	cnn = pyo.connect(cnn_string)
 	cursor = cnn.cursor()
@@ -32,7 +38,6 @@ def change_resolution(choice):
         root.geometry("1920x1080")
     elif resolution == "800x500":
         root.geometry("800x500")
-    global_choice = choice
 
 def dark_mode_switch():
 	variable = dark_mode_variable.get()
@@ -117,7 +122,7 @@ table.pack()
 
 cnn_string = (
 		r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
-		r"DBQ=C:\Users\oscar\Documents\VSCode Projects\flightlogbook\database.accdb"
+		+ database_path
 		)
 cnn = pyo.connect(cnn_string)
 cursor = cnn.cursor()
