@@ -38,6 +38,8 @@ def change_resolution(choice):
         root.geometry("1920x1080")
     elif resolution == "800x500":
         root.geometry("800x500")
+    elif resolution == "off":
+        pass
 
 def dark_mode_switch():
 	variable = dark_mode_variable.get()
@@ -81,7 +83,7 @@ my_tabs.pack(pady=10)
 tab_create_new_flight = my_tabs.add("New Flight")
 tab_view_past_flights = my_tabs.add("Past Flight")
 tab_settings = my_tabs.add("Settings")
-                
+
 root.geometry(ini_resolution)
 
 # Create new flight section
@@ -135,7 +137,7 @@ dark_mode_variable = customtkinter.StringVar(value="on")
 dark_mode_switch = customtkinter.CTkSwitch(tab_settings,text="Dark Mode",variable=dark_mode_variable,onvalue="on",offvalue="off",command=dark_mode_switch)
 dark_mode_switch.pack(pady=10)
 
-resolution_options=["3840x2160","2560x1440","1920x1080","800x500"]
+resolution_options=["3840x2160","2560x1440","1920x1080","800x500","off"]
 resolution_combo_box = customtkinter.CTkComboBox(tab_settings, values=resolution_options, command=change_resolution)
 resolution_combo_box.pack(pady=5)
 
