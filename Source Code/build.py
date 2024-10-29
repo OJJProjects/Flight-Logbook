@@ -1,4 +1,4 @@
-# Import libraries
+# Import required libraries
 import os
 from os import mkdir
 import shutil
